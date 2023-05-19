@@ -18,19 +18,28 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
-    
+    private int blockAmount;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        SetupBrickField();
+    }
+
+    private void SetupBrickField()
+    {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
-        int[] pointCountArray = new [] {1,1,2,2,5,5};
+
+        blockAmount = perLine * LineCount;
+
+        int[] pointCountArray = new[] { 1, 1, 2, 2, 5, 5 };
         for (int i = 0; i < LineCount; ++i)
         {
             for (int x = 0; x < perLine; ++x)
             {
-                Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
+                Vector3 position = new(-1.5f + step * x, 2.5f + i * 0.3f, 0);
                 var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
@@ -66,6 +75,13 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
+
+        blockAmount--;
+        if(blockAmount <= 0)
+        {
+            Debug.Log("Out of bricks!");
+            SetupBrickField();
+        }
     }
 
     public void GameOver()
