@@ -8,11 +8,11 @@ using System;
 public class HiScore : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI hichScoreTextBlock;
-    [SerializeField] TextMeshProUGUI topHiScoreText;
-    [SerializeField] TextMeshProUGUI topHiScoreNameText;
+    [SerializeField] TextMeshProUGUI LastScoreText;
     private string json;
     private HighScores highScores;
     private const int maxHighscoreEntries = 10;
+    private string playerName;
 
     void Start()
     {
@@ -41,7 +41,6 @@ public class HiScore : MonoBehaviour
         {
             for (int i = maxHighscoreEntries; i < highScores.highScoreList.Count; i++)
             {
-                Debug.Log("Removing entry#" + i + ":" + highScores.highScoreList[i].playerName + highScores.highScoreList[i].score);
                 highScores.highScoreList.RemoveAt(i);
             }
         }
@@ -51,13 +50,27 @@ public class HiScore : MonoBehaviour
     {
         highScores.highScoreList.Sort((x, y) => x.score.CompareTo(y.score)); // Sorts in ascending order
         highScores.highScoreList.Reverse(); // Flips the list to descending order
+        Score.Instance.bestScore = highScores.highScoreList[0].score;
+        Score.Instance.bestPlayer = highScores.highScoreList[0].playerName;
     }
 
     private void ReadSingleton()
     {
-        // TODO: Get last score from the singleton, add to the list
-        // Temp: add single entry
-        highScores.highScoreList.Add(new HighScoreEntry { score = UnityEngine.Random.Range(0, 200), playerName = "Mel" });
+        // Read name from a file
+        playerName = GameObject.Find("Canvas").GetComponent<InputName>().LoadName();
+        if (playerName == null)
+        {
+            playerName = "Player";
+        }
+
+        // Get score from singleton, if not 0 then add to the highscore list. To be sorted in a different method.
+        int scoreLastRound = Score.Instance.lastScore;
+        if (scoreLastRound != 0)
+        {
+            highScores.highScoreList.Add(new HighScoreEntry { score = scoreLastRound, playerName = playerName });
+            LastScoreText.gameObject.SetActive(true);
+            LastScoreText.text = "Score last round: " + scoreLastRound;
+        }
     }
 
     private void LoadScores(string filePath)
@@ -67,6 +80,9 @@ public class HiScore : MonoBehaviour
         {
             json = File.ReadAllText(filePath);
             highScores = JsonUtility.FromJson<HighScores>(json);
+        } else
+        {
+            highScores = JsonUtility.FromJson<HighScores>("{}");
         }
 
         json = JsonUtility.ToJson(highScores);
@@ -74,10 +90,12 @@ public class HiScore : MonoBehaviour
 
     private void PrintScores()
     {
+        string hstb = "Highscores:";
         foreach (var x in highScores.highScoreList)
         {
-            Debug.Log("Entry " + x + ":" + x.playerName.ToString() + " - " + x.score.ToString());
+            hstb += "<br>" + x.score.ToString("0000") + "\t" + x.playerName.ToString();
         }
+        hichScoreTextBlock.text = hstb;
     }
 
     [Serializable]

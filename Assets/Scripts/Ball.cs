@@ -6,6 +6,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     private Rigidbody m_Rigidbody;
+    public AudioClip ballSound;
 
     void Start()
     {
@@ -14,6 +15,8 @@ public class Ball : MonoBehaviour
     
     private void OnCollisionExit(Collision other)
     {
+        AudioManager.Instance.Play(ballSound);
+
         var velocity = m_Rigidbody.velocity;
         
         //after a collision we accelerate a bit

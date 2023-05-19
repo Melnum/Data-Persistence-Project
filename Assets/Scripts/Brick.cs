@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +6,8 @@ public class Brick : MonoBehaviour
     public UnityEvent<int> onDestroyed;
     
     public int PointValue;
+
+    public AudioClip brickSound;
 
     void Start()
     {
@@ -35,9 +34,12 @@ public class Brick : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        AudioManager.Instance.Play(brickSound);
+
         onDestroyed.Invoke(PointValue);
         
-        //slight delay to be sure the ball have time to bounce
+        // slight delay to be sure the ball have time to bounce
+        // Not too much, destroys game feel
         Destroy(gameObject, 0.02f);
     }
 }

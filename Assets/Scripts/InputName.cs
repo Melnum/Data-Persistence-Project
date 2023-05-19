@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 
-
 public class InputName : MonoBehaviour
 {
     [SerializeField] TMP_InputField nameInputField;
@@ -13,7 +12,10 @@ public class InputName : MonoBehaviour
     void Start()
     {
         // Load player name
-        LoadName();
+        playerName = LoadName();
+        if(playerName==null) {
+            playerName = "Player";
+        };
         nameText.text = playerName;
 
         // TODO: Load highscore list
@@ -61,7 +63,7 @@ public class InputName : MonoBehaviour
         File.WriteAllText(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "playername.json", json);
     }
 
-    public void LoadName()
+    public string LoadName()
     {
         string path = Application.persistentDataPath + Path.AltDirectorySeparatorChar + "playername.json";
         if (File.Exists(path))
@@ -69,8 +71,9 @@ public class InputName : MonoBehaviour
             string json = File.ReadAllText(path);
             SavedPlayerName data = JsonUtility.FromJson<SavedPlayerName>(json);
 
-            playerName = data.playerName;
+            return data.playerName;
         }
+        return null;
     }
 
 

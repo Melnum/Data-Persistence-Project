@@ -380,6 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9378aa3f6eac646479e54cd5932ffd3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballSound: {fileID: 8300000, guid: 072c2abeb2b29eb49976721f8e4e9aae, type: 3}
 --- !u!1 &188020404
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,7 +780,9 @@ MonoBehaviour:
   LineCount: 6
   Ball: {fileID: 177912862}
   ScoreText: {fileID: 188020406}
+  bestScoreText: {fileID: 2078529056}
   GameOverText: {fileID: 474497238}
+  gameoverSound: {fileID: 8300000, guid: 569dc7a05b19c2e4188dcc1ecb3e4a51, type: 3}
 --- !u!114 &450625943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -969,6 +972,7 @@ GameObject:
   - component: {fileID: 610430370}
   - component: {fileID: 610430369}
   - component: {fileID: 610430372}
+  - component: {fileID: 610430373}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1075,6 +1079,19 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &610430373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610430368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3336d6c97bbb07544a0ccc2b36a4786c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 610430371}
 --- !u!1 &850602367
 GameObject:
   m_ObjectHideFlags: 0

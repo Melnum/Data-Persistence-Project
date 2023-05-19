@@ -11,6 +11,7 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text bestScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -20,11 +21,18 @@ public class MainManager : MonoBehaviour
 
     private int blockAmount;
 
+    private CameraShake cameraShaker;
+
+    public AudioClip gameoverSound;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        Score.Instance.lastScore = 0; // Directly accessing a public variable in a singleton - totally legit way of doing it.
+        cameraShaker = Camera.main.GetComponent<CameraShake>();
         SetupBrickField();
+        bestScoreText.text = "Best score: " + Score.Instance.bestScore + " Name: " + Score.Instance.bestPlayer;
     }
 
     private void SetupBrickField()
@@ -77,9 +85,11 @@ public class MainManager : MonoBehaviour
         ScoreText.text = $"Score : {m_Points}";
 
         blockAmount--;
-        if(blockAmount <= 0)
+        cameraShaker.ShakeCamera(0.1f, 0.05f);
+
+        if (blockAmount <= 0)
         {
-            Debug.Log("Out of bricks!");
+            // Set up a new set of bricks when you run out
             SetupBrickField();
         }
     }
@@ -87,6 +97,9 @@ public class MainManager : MonoBehaviour
     public void GameOver()
     {
         m_GameOver = true;
-        GameOverText.SetActive(true);
+        AudioManager.Instance.Play(gameoverSound);
+        Score.Instance.lastScore = m_Points; // Store the score to the singleton, to be added to the highscore list
+        SceneManager.LoadScene(0); // No more gameover screen, straight back to main menu
+        //        GameOverText.SetActive(true);
     }
 }
